@@ -1,0 +1,10 @@
+server:
+  port: 9008
+spring:
+  application:
+    name: service-testa-new
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+

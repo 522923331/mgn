@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/gateway-gray/gateway-gray.iml" filepath="$PROJECT_DIR$/gateway-gray/gateway-gray.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/mgn.iml" filepath="$PROJECT_DIR$/.idea/mgn.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-testa/service-testa.iml" filepath="$PROJECT_DIR$/service-testa/service-testa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-testa-new/service-testa-new.iml" filepath="$PROJECT_DIR$/service-testa-new/service-testa-new.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-testb/service-testb.iml" filepath="$PROJECT_DIR$/service-testb/service-testb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-testb-new/service-testb-new.iml" filepath="$PROJECT_DIR$/service-testb-new/service-testb-new.iml" />
+    </modules>
+  </component>
+</project>
