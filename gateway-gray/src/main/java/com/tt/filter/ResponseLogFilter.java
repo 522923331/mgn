@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * 请求响应日志打印
  */
-//@Component
+@Component
 @Slf4j
 public class ResponseLogFilter implements GlobalFilter, Ordered {
 
@@ -160,10 +160,6 @@ public class ResponseLogFilter implements GlobalFilter, Ordered {
                         }
 
                         Log logDTO = buildLog(responseBody, requestBody.get(), httpStatus, request);
-                        exchange.getSession().subscribe(webSession -> {
-                            logDTO.setSessionId(webSession.getId());
-                        });
-
                         log.info(LogHelper.toJsonString(logDTO));
                         return bufferFactory.wrap(content);
                     }));
@@ -194,7 +190,6 @@ public class ResponseLogFilter implements GlobalFilter, Ordered {
             logDTO.setStatus(httpStatus.value());
         }
         logDTO.setHandleTime(handleTime);
-        logDTO.setRequestId(requestId);
         logDTO.setIp(IpUtils.getClientIp(request));
         return logDTO;
     }

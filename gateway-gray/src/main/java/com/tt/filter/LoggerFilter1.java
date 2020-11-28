@@ -17,10 +17,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * @description: 日志打印类
+ * @description: 日志打印类  
  * @program: mgn
  **/
-@Component
+//@Component
 @Slf4j
 public class LoggerFilter1 implements GlobalFilter, Ordered {
 

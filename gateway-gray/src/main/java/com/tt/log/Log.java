@@ -25,12 +25,9 @@ public class Log {
     private String account;
     private String requestBody;
     private String responseBody;
-    private String requestId;
     private String requestMethod;
     private Integer status;
     private String serverIp;
-    private String sessionId;
-    private String _class;
 
     public Log() {
         this(Log.TYPE.REQUEST);

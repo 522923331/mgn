@@ -34,7 +34,7 @@ import java.util.function.Consumer;
  * @description: 请求日志打印
  **/
 
-//@Component
+@Component
 @Slf4j
 public class RequestLogFilter implements GlobalFilter, Ordered {
 
@@ -48,17 +48,6 @@ public class RequestLogFilter implements GlobalFilter, Ordered {
         long startTime = System.currentTimeMillis();
         try {
             ServerHttpRequest request = exchange.getRequest();
-            // 设置X-Request-Id
-            AtomicReference<String> requestId = new AtomicReference<>(GenerateIdUtils.requestIdWithUUID());
-            Consumer<HttpHeaders> httpHeadersConsumer = httpHeaders -> {
-                String headerRequestId = request.getHeaders().getFirst(HeaderConstant.REQUEST_ID);
-                if (StringUtils.isBlank(headerRequestId)) {
-                    httpHeaders.set(HeaderConstant.REQUEST_ID, requestId.get());
-                } else {
-                    requestId.set(headerRequestId);
-                }
-                httpHeaders.set(HeaderConstant.START_TIME_KEY, String.valueOf(startTime));
-            };
             ServerRequest serverRequest = ServerRequest.create(exchange,
                     HandlerStrategies.withDefaults().messageReaders());
             URI requestUri = request.getURI();
@@ -67,6 +56,10 @@ public class RequestLogFilter implements GlobalFilter, Ordered {
             HttpHeaders headers = request.getHeaders();
             MediaType mediaType = headers.getContentType();
             String method = request.getMethodValue().toUpperCase();
+
+            Consumer<HttpHeaders> httpHeadersConsumer = httpHeaders -> {
+                httpHeaders.set(HeaderConstant.START_TIME_KEY, String.valueOf(startTime));
+            };
 
             // 原始请求体
             final AtomicReference<String> requestBody = new AtomicReference<>();
@@ -87,34 +80,29 @@ public class RequestLogFilter implements GlobalFilter, Ordered {
             logDTO.setRequestUrl(url);
             logDTO.setRequestBody(requestBody.get());
             logDTO.setRequestMethod(method);
-            logDTO.setRequestId(requestId.get());
             logDTO.setIp(IpUtils.getClientIp(request));
 
             ServerHttpRequest serverHttpRequest = exchange.getRequest().mutate().headers(httpHeadersConsumer).build();
-            ServerWebExchange build = exchange.mutate().request(serverHttpRequest).build();
-            return build.getSession().flatMap(webSession -> {
-                logDTO.setSessionId(webSession.getId());
-                if (newBody.get() && headers.getContentLength() > 0) {
-                    Mono<String> bodyToMono = serverRequest.bodyToMono(String.class);
-                    return bodyToMono.flatMap(reqBody -> {
-                        logDTO.setRequestBody(reqBody);
-                        // 重写原始请求
-                        ServerHttpRequestDecorator requestDecorator = new ServerHttpRequestDecorator(exchange.getRequest()) {
-                            @Override
-                            public Flux<DataBuffer> getBody() {
-                                NettyDataBufferFactory nettyDataBufferFactory = new NettyDataBufferFactory(new UnpooledByteBufAllocator(false));
-                                DataBuffer bodyDataBuffer = nettyDataBufferFactory.wrap(reqBody.getBytes());
-                                return Flux.just(bodyDataBuffer);
-                            }
-                        };
-                        return chain.filter(exchange.mutate()
-                                .request(requestDecorator)
-                                .build()).then(LogHelper.doRecord(logDTO));
-                    });
-                } else {
-                    return chain.filter(exchange).then(LogHelper.doRecord(logDTO));
-                }
-            });
+            if (newBody.get() && headers.getContentLength() > 0) {
+                Mono<String> bodyToMono = serverRequest.bodyToMono(String.class);
+                return bodyToMono.flatMap(reqBody -> {
+                    logDTO.setRequestBody(reqBody);
+                    // 重写原始请求
+                    ServerHttpRequestDecorator requestDecorator = new ServerHttpRequestDecorator(serverHttpRequest) {
+                        @Override
+                        public Flux<DataBuffer> getBody() {
+                            NettyDataBufferFactory nettyDataBufferFactory = new NettyDataBufferFactory(new UnpooledByteBufAllocator(false));
+                            DataBuffer bodyDataBuffer = nettyDataBufferFactory.wrap(reqBody.getBytes());
+                            return Flux.just(bodyDataBuffer);
+                        }
+                    };
+                    return chain.filter(exchange.mutate()
+                            .request(requestDecorator)
+                            .build()).then(LogHelper.doRecord(logDTO));
+                });
+            } else {
+                return chain.filter(exchange).then(LogHelper.doRecord(logDTO));
+            }
 
         } catch (Exception e) {
             log.error("请求日志打印出现异常", e);

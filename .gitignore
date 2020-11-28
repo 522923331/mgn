@@ -140,14 +140,8 @@ fabric.properties
 
 *.iml
 
-*.idea/
-
-
 .idea/
 
 .flattened-pom.xml
 **/.flattened-pom.xml
 
-/HELP.md
-/mvnw
-/mvnw.cmd
