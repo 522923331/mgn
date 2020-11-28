@@ -145,3 +145,6 @@ fabric.properties
 .flattened-pom.xml
 **/.flattened-pom.xml
 
+.mvnw/
+mvnw
+mvnw.cmd
