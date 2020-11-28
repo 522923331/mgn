@@ -1,0 +1,51 @@
+server:
+  port: 88
+spring:
+  application:
+    name: gateway-gray
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+
+      routes:
+        - id: service-testa
+          uri: lb://service-testa
+          order: 2
+          predicates:
+            - Path=/userTestA/**
+            - Method=POST
+          filters:
+            - AddRequestHeader=X-Request-Foo, Bar  #对于所有匹配的请求，这将向下游请求的头中添加 x-request-foo:bar header
+
+        - id: service-testa-new
+          uri: lb://service-testa-new
+          order: 1
+          predicates:
+            - Path=/user/**
+            #- Between=2020-10-23T17:05:47.789-07:00[Asia/Shanghai], 2020-10-23T17:09:47.789-07:00[Asia/Shanghai] #时间在两者之间匹配。时间2必须在时间1之后的时间点。
+            #- Before=2017-01-20T17:42:47.789-07:00[Asia/Shanghai] #Before Route Predicate Factory采用一个参数——日期时间。在该日期时间之前发生的请求都将被匹配。After与之相反
+#          filters:
+#            - PrefixPath=/user #在断言的path前面加上当前的值
+        - id: service-testb
+          uri: lb://service-testb
+          predicates:
+            - Path=/room/**
+            - Host=**.somehost.org,**.anotherhost.org
+            #- Method=POST
+            - Query=baz
+          #filters:
+            #- StripPrefix=1 #将cashier过滤掉
+
+        - id: service-testb-new
+          uri: lb://service-testb-new
+          order: 8999 # 越小越优先
+          predicates:
+            - Header=X-Request-Id,\d+  #请求包含次header名称且正则表达式为真的将会被匹配。
+            #- Cookie=chocolate,ch.p  #请求包含次cookie名称且正则表达式为真的将会被匹配。
+          #filters:
+            #- RewritePath=/demo/(?<segment>.*), /$\{segment}
+
+
+
