@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * RedisKeyEnum
  *
- * @author lishow
  * @date 2020/9/2
  */
 public enum RedisKeyEnum {

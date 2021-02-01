@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tt.mapper.attr.AttrMapper">
+    <resultMap id="BaseResultMap" type="com.tt.entity.Attr">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="attr_cate_id" jdbcType="BIGINT" property="attrCateId"/>
+        <result column="attr_name" jdbcType="VARCHAR" property="attrName"/>
+        <result column="attr_value" jdbcType="VARCHAR" property="attrValue"/>
+        <result column="attr_value_type" jdbcType="INTEGER" property="attrValueType"/>
+        <result column="attr_required" jdbcType="INTEGER" property="attrRequired"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+        <result column="deleted" jdbcType="INTEGER" property="deleted"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, attr_cate_id, attr_name, attr_value, attr_value_type, attr_required, create_user,
+    update_user, deleted, create_time, update_time
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_attr
+        where id = #{id,jdbcType=BIGINT} and deleted = 0
+    </select>
+    <!--  查询所有属性  -->
+    <select id="findAllList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_attr where deleted = 0
+    </select>
+    <!--  通过属性分类id查询属性列表  -->
+    <select id="listAttrByAttrCateId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_attr
+        where attr_cate_id = #{attrCateId,jdbcType=BIGINT} and deleted = 0
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_attr
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.tt.entity.Attr">
+    insert into t_attr (id, attr_cate_id, attr_name,
+      attr_value, attr_value_type, attr_required,
+      create_user, update_user, deleted,
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{attrCateId,jdbcType=BIGINT}, #{attrName,jdbcType=VARCHAR},
+      #{attrValue,jdbcType=VARCHAR}, #{attrValueType,jdbcType=INTEGER}, #{attrRequired,jdbcType=INTEGER},
+      #{createUser,jdbcType=BIGINT}, #{updateUser,jdbcType=BIGINT}, #{deleted,jdbcType=INTEGER},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.tt.entity.Attr">
+        insert into t_attr
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=''">
+                id,
+            </if>
+            <if test="attrCateId != null and attrCateId !=''">
+                attr_cate_id,
+            </if>
+            <if test="attrName != null and attrName !=''">
+                attr_name,
+            </if>
+            <if test="attrValue != null and attrValue !=''">
+                attr_value,
+            </if>
+            <if test="attrValueType != null">
+                attr_value_type,
+            </if>
+            <if test="attrRequired != null">
+                attr_required,
+            </if>
+            <if test="createUser != null and createUser !=''">
+                create_user,
+            </if>
+            <if test="updateUser != null and updateUser !=''">
+                update_user,
+            </if>
+            <if test="deleted != null">
+                deleted,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=''">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="attrCateId != null and attrCateId !=''">
+                #{attrCateId,jdbcType=BIGINT},
+            </if>
+            <if test="attrName != null and attrName !=''">
+                #{attrName,jdbcType=VARCHAR},
+            </if>
+            <if test="attrValue != null and attrValue !=''">
+                #{attrValue,jdbcType=VARCHAR},
+            </if>
+            <if test="attrValueType != null">
+                #{attrValueType,jdbcType=INTEGER},
+            </if>
+            <if test="attrRequired != null">
+                #{attrRequired,jdbcType=INTEGER},
+            </if>
+            <if test="createUser != null and createUser !=''">
+                #{createUser,jdbcType=BIGINT},
+            </if>
+            <if test="updateUser != null and updateUser !=''">
+                #{updateUser,jdbcType=BIGINT},
+            </if>
+            <if test="deleted != null">
+                #{deleted,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.tt.entity.Attr">
+        update t_attr
+        <set>
+            <if test="attrCateId != null and attrCateId !=''">
+                attr_cate_id = #{attrCateId,jdbcType=BIGINT},
+            </if>
+            <if test="attrName != null and attrName !=''">
+                attr_name = #{attrName,jdbcType=VARCHAR},
+            </if>
+            <if test="attrValue != null and attrValue !=''">
+                attr_value = #{attrValue,jdbcType=VARCHAR},
+            </if>
+            <if test="attrValueType != null">
+                attr_value_type = #{attrValueType,jdbcType=INTEGER},
+            </if>
+            <if test="attrRequired != null">
+                attr_required = #{attrRequired,jdbcType=INTEGER},
+            </if>
+            <if test="createUser != null and createUser !=''">
+                create_user = #{createUser,jdbcType=BIGINT},
+            </if>
+            <if test="updateUser != null and updateUser !=''">
+                update_user = #{updateUser,jdbcType=BIGINT},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.tt.entity.Attr">
+    update t_attr
+    set attr_cate_id = #{attrCateId,jdbcType=BIGINT},
+      attr_name = #{attrName,jdbcType=VARCHAR},
+      attr_value = #{attrValue,jdbcType=VARCHAR},
+      attr_value_type = #{attrValueType,jdbcType=INTEGER},
+      attr_required = #{attrRequired,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=BIGINT},
+      update_user = #{updateUser,jdbcType=BIGINT},
+      deleted = #{deleted,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

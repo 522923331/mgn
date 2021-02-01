@@ -1,13 +1,17 @@
 package com.tt.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.tt.entity.Attr;
+import com.tt.service.ShopService;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import sun.rmi.runtime.Log;
 
 @RestController
 @RequestMapping("/room")
 public class RoomController {
+    @Autowired
+    private ShopService shopService;
 
     @PostMapping("/getRoomInfo")
     @ResponseBody
@@ -19,5 +23,11 @@ public class RoomController {
     @ResponseBody
     public String findRoom(){
         return "testb findRoom";
+    }
+
+    @PostMapping("/getAttr/{id}")
+    @ResponseBody
+    public Attr getAttr(@PathVariable("id") Long id){
+        return shopService.queryAttr(id);
     }
 }
