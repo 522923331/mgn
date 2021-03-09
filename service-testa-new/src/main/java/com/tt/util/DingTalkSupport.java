@@ -2,7 +2,10 @@ package com.tt.util;
 
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiRobotSendRequest;
+import com.dingtalk.api.request.OapiUserGetRequest;
+import com.dingtalk.api.response.OapiUserGetResponse;
 import com.google.common.base.Splitter;
+import com.taobao.api.ApiException;
 import com.tt.constant.DingTalkConstants;
 import lombok.extern.slf4j.Slf4j;
 
