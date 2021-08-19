@@ -10,3 +10,4 @@ spring:
 
 dingTalk:
   webHook: xxx
+  three: 3333
